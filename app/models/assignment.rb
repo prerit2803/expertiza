@@ -464,7 +464,7 @@ class Assignment < ActiveRecord::Base
   # This method is used for export contents of grade#view.  -Zhewei
   def self.export_fields(options)
     fields = []
-    fields << 'Team Name'
+    fields << 'Team  Name'
     fields << 'Team  Member(s)'
     fields.push('Team Max', 'Team Min', 'Team Avg') if options['team_score'] == 'true'
     fields.push('Submitted Max', 'Submitted Min', 'Submitted Avg') if options['submitted_score']
