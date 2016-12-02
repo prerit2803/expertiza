@@ -51,7 +51,7 @@ class Assignment < ActiveRecord::Base
     true
   end
   alias_method :team_assignment,:team_assignment?
-  
+
   def has_topics?
     @has_topics ||= !sign_up_topics.empty?
   end
@@ -211,7 +211,7 @@ class Assignment < ActiveRecord::Base
   end
 
   # Check whether review, metareview, etc.. is allowed
-  # The permissions of TopicDueDate is the same as AssignmentDueDate. 
+  # The permissions of TopicDueDate is the same as AssignmentDueDate.
   # Here, column is usually something like 'review_allowed_id'
   def check_condition(column, topic_id = nil)
     next_due_date = DueDate.get_next_due_date(self.id, topic_id)
@@ -465,7 +465,7 @@ class Assignment < ActiveRecord::Base
   def self.export_fields(options)
     fields = []
     fields << 'Team Name'
-    fields << 'Team Member(s)'
+    fields << 'Team  Member(s)'
     fields.push('Team Max', 'Team Min', 'Team Avg') if options['team_score'] == 'true'
     fields.push('Submitted Max', 'Submitted Min', 'Submitted Avg') if options['submitted_score']
     fields.push('Metareview Max', 'Metareview Min', 'Metareview Avg') if options['metareview_score']
