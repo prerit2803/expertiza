@@ -60,6 +60,7 @@ gem 'react-rails', '~> 1.0'
 gem 'jquery-tablesorter'
 gem 'github_api'
 gem 'rufus-scheduler'
+gem 'google-api-client'
 
 group :development do
   gem 'daemons'

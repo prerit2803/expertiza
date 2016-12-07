@@ -325,7 +325,7 @@ Expertiza::Application.routes.draw do
       post :automatic_review_mapping_staggered
       #E1600
       post :start_self_review
-      post :save_grade_and_comment_for_reviewer 
+      post :save_grade_and_comment_for_reviewer
     end
   end
 
@@ -434,6 +434,8 @@ Expertiza::Application.routes.draw do
       post :submit_hyperlink
       get :submit_hyperlink
       get :view
+      get :try_auth
+      get :oauth2callback
     end
   end
 
@@ -443,7 +445,7 @@ Expertiza::Application.routes.draw do
       post :submit
       post :student_submit
       post :update_suggestion
-    end      
+    end
   end
 
   resources :survey do
