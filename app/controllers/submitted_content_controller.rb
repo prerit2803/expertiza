@@ -17,9 +17,7 @@ class SubmittedContentController < ApplicationController
   def oauth2callback
     client_secrets = Google::APIClient::ClientSecrets.load(File.join(Rails.root, 'client_secret.json'))
     auth_client = client_secrets.to_authorization
-    auth_client.update!(
-      :scope => 'https://www.googleapis.com/auth/drive.metadata.readonly',
-      :redirect_uri => url('/submitted_content/oauth2callback'))
+    auth_client.update!(:scope => 'https://www.googleapis.com/auth/drive.metadata.readonly',:redirect_uri => url_for('/submitted_content/oauth2callback'))
     if request['code'] == nil
       auth_uri = auth_client.authorization_uri.to_s
       redirect_to(auth_uri)
@@ -33,7 +31,7 @@ class SubmittedContentController < ApplicationController
       return
     end
   end
-  
+
   def action_allowed?
     ['Instructor',
      'Teaching Assistant',
