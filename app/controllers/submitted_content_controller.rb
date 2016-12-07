@@ -1,4 +1,4 @@
-require 'google/apis/drive_v2'
+require 'google/apis/drive_v3'
 require 'google/api_client/client_secrets'
 require 'json'
 
