@@ -488,7 +488,7 @@ class Assignment < ActiveRecord::Base
 
     self.due_dates.each do |due_date|
       if due_date.deadline_type.name == 'submission'
-        scheduler.at(due_date.due_at.to_s, "assignment"=>self) do |job, time, arg|
+        scheduler.at(due_date.due_at.to_s,  "assignment"=>self) do |job, time, arg|
           LinkSubmissionHistory.add_submission(job.opts['assignment'].id)
         end
       end
