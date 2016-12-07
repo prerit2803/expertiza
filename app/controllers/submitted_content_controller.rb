@@ -3,6 +3,37 @@ require 'google/api_client/client_secrets'
 require 'json'
 
 class SubmittedContentController < ApplicationController
+  def try_auth
+    unless session.has_key?(:credentials)
+    redirect to('/submitted_content/oauth2callback')
+    return
+    end
+    client_opts = JSON.parse(session[:credentials])
+    auth_client = Signet::OAuth2::Client.new(client_opts)
+    drive = Google::Apis::DriveV2::DriveService.new
+    files = drive.list_files(options: { authorization: auth_client })
+  end
+
+  def oauth2callback
+    client_secrets = Google::APIClient::ClientSecrets.load(File.join(Rails.root, 'client_secret.json'))
+    auth_client = client_secrets.to_authorization
+    auth_client.update!(
+      :scope => 'https://www.googleapis.com/auth/drive.metadata.readonly',
+      :redirect_uri => url('/submitted_content/oauth2callback'))
+    if request['code'] == nil
+      auth_uri = auth_client.authorization_uri.to_s
+      redirect_to(auth_uri)
+      return
+    else
+      auth_client.code = request['code']
+      auth_client.fetch_access_token!
+      auth_client.client_secret = nil
+      session[:credentials] = auth_client.to_json
+      redirect_to('/submitted_content/try_auth')
+      return
+    end
+  end
+  
   def action_allowed?
     ['Instructor',
      'Teaching Assistant',
@@ -309,36 +340,7 @@ class SubmittedContentController < ApplicationController
   #  "<a href = #{url_for(:controller => :versions,:action => :revert,:id => @participant.versions.last.id)}>undo</a>"
   # end
 
-  def try_auth
-    unless session.has_key?(:credentials)
-    redirect to('/submitted_content/oauth2callback')
-    return
-    end
-    client_opts = JSON.parse(session[:credentials])
-    auth_client = Signet::OAuth2::Client.new(client_opts)
-    drive = Google::Apis::DriveV2::DriveService.new
-    files = drive.list_files(options: { authorization: auth_client })
-  end
 
-  def oauth2callback
-    client_secrets = Google::APIClient::ClientSecrets.load(File.join(Rails.root, 'client_secret.json'))
-    auth_client = client_secrets.to_authorization
-    auth_client.update!(
-      :scope => 'https://www.googleapis.com/auth/drive.metadata.readonly',
-      :redirect_uri => url('/submitted_content/oauth2callback'))
-    if request['code'] == nil
-      auth_uri = auth_client.authorization_uri.to_s
-      redirect_to(auth_uri)
-      return
-    else
-      auth_client.code = request['code']
-      auth_client.fetch_access_token!
-      auth_client.client_secret = nil
-      session[:credentials] = auth_client.to_json
-      redirect_to('/submitted_content/try_auth')
-      return
-    end
-  end
   private
 
   # authorizations: reader,submitter, reviewer
